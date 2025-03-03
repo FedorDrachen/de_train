@@ -1,4 +1,4 @@
-package ru.akhitev;
+package ru.fDrachen;
 
 /**
  * Hello world!
