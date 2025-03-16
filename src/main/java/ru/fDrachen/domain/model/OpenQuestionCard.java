@@ -2,11 +2,12 @@ package ru.fDrachen.domain.model;
 
 public class OpenQuestionCard {
 
+    private final Long id;
     private final String question;
-
     private final String expectedAnswer;
 
-    public OpenQuestionCard(String question, String expectedAnswer) {
+    public OpenQuestionCard(Long id, String question, String expectedAnswer) {
+
         if (question == null || question.trim().isEmpty()){
             throw new IllegalArgumentException("Поле question не должно быть пустым или null");
         }
@@ -15,6 +16,7 @@ public class OpenQuestionCard {
             throw new IllegalArgumentException("Поле expectedAnswer не должно быть пустым или null");
         }
 
+        this.id = id;
         this.question = question;
         this.expectedAnswer = expectedAnswer;
     }
@@ -25,6 +27,10 @@ public class OpenQuestionCard {
 
     public boolean checkAnswer(String userAnswer) {
         return expectedAnswer.equals(userAnswer);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
