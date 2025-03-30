@@ -2,8 +2,10 @@ package ru.fDrachen.console.controller;
 
 import org.springframework.stereotype.Component;
 
+import ru.fDrachen.domain.model.OpenQuestionCard;
 import ru.fDrachen.domain.service.QuestionService;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 @Component
