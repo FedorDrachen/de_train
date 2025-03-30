@@ -1,4 +1,4 @@
-package ru.fDrachen.gui.config;
+package ru.fDrachen.web.gui.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import ru.fDrachen.spring.hibernate.config.DbConfig;
 @Configuration
-@PropertySource("jdbc.properties")
 @Import(DbConfig.class)
 @ComponentScan(basePackages = "ru.fDrachen")
+@PropertySource("jdbc.properties")
 public class SpringConfig {
 
 }
