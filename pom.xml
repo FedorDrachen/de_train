@@ -5,6 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ru.fDrachen</groupId>
+
   <artifactId>de_train</artifactId>
   <version>1.0</version>
   <packaging>pom</packaging>
@@ -26,6 +27,8 @@
     <module>de_train_ui_swing</module>
     <module>de_train_db_spring_hibernate</module>
     <module>de_train_api</module>
+    <module>de_train_http_client</module>
+    <module>de_train_feign_client</module>
   </modules>
 
   <properties>
@@ -50,7 +53,11 @@
     <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
     <log4j.version>2.24.3</log4j.version>
     <springdoc-openapi-starter-webmvc-ui.version>2.8.5</springdoc-openapi-starter-webmvc-ui.version>
+    <spring-cloud-starter-openfeign.version>4.2.1</spring-cloud-starter-openfeign.version>
+    <feign-okhttp.version>13.5</feign-okhttp.version>
+    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
   </properties>
+
 
   <dependencyManagement>
     <dependencies>
@@ -70,14 +77,55 @@
         <version>${spring_jdbc_module.version}</version>
       </dependency>
       <dependency>
+        <groupId>ru.fDrachen</groupId>
+        <artifactId>de_train_api</artifactId>
+        <version>${spring_jdbc_module.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ru.fDrachen</groupId>
+        <artifactId>de_train_http_client</artifactId>
+        <version>${spring_jdbc_module.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ru.fDrachen</groupId>
+        <artifactId>de_train_feign_client</artifactId>
+        <version>${spring_jdbc_module.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
+        <version>${spring-context.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
         <version>${spring-context.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+        <version>${spring-cloud-starter-openfeign.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-okhttp</artifactId>
+        <version>${feign-okhttp.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-httpclient</artifactId>
+        <version>${feign-okhttp.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-jackson</artifactId>
+        <version>${feign-okhttp.version}</version>
       </dependency>
       <dependency>
         <groupId>com.h2database</groupId>
@@ -88,11 +136,6 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-dbcp2</artifactId>
         <version>${commons-dbcp2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${spring-context.version}</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -115,6 +158,11 @@
         <version>${mapstruct.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-api</artifactId>
         <version>${log4j.version}</version>
@@ -123,6 +171,16 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${log4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.10.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.17.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -137,13 +195,6 @@
           <configuration>
             <source>${java.version}</source>
             <target>${java.version}</target>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${mapstruct.version}</version>
-              </path>
-            </annotationProcessorPaths>
           </configuration>
         </plugin>
         <plugin>
@@ -165,7 +216,61 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+              </path>
+            </annotationProcessorPaths>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>jacoco-report</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>jacoco-check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <rule>
+                    <element>PACKAGE</element>
+                    <limits>
+                      <limit>
+                        <counter>LINE</counter>
+                        <value>COVEREDRATIO</value>
+                        <minimum>0.50</minimum>
+                      </limit>
+                    </limits>
+                  </rule>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
 </project>
+

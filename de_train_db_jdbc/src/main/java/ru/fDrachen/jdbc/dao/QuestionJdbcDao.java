@@ -134,7 +134,7 @@ public class QuestionJdbcDao implements QuestionRepository {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:h2:mem:task;DB_CLOSE_DELAY=-1",
+        return DriverManager.getConnection("jdbc:h2:mem:question;DB_CLOSE_DELAY=-1",
                 "admin", "admin");
     }
 
