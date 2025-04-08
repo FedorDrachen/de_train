@@ -2,19 +2,25 @@ package ru.fDrachen.spring.hibernate.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-@Table(name = "question")
-public class OpenQuestionCardEntity {
+@Table(name = "project")
+public class ProjectEntity {
     @Id
     @Column
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private ProjectEntity project;
+
     @Column
     private String question;
+
     @Column
     private String expectedAnswer;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private List<OpenQuestionCardEntity> questions;
 
     public Long getId() {
         return id;
@@ -39,11 +45,12 @@ public class OpenQuestionCardEntity {
     public void setExpectedAnswer(String expectedAnswer) {
         this.expectedAnswer = expectedAnswer;
     }
-    public ProjectEntity getProject() {
-        return project;
+
+    public List<OpenQuestionCardEntity> getQuestions() {
+        return questions;
     }
 
-    public void setProject(ProjectEntity project) {
-        this.project = project;
+    public void setQuestions(List<OpenQuestionCardEntity> questions) {
+        this.questions = questions;
     }
 }

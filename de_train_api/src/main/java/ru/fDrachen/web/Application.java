@@ -1,4 +1,4 @@
-package ru.fDrachen.web.gui;
+package ru.fDrachen.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

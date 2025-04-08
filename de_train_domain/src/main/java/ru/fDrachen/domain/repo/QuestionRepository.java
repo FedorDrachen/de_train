@@ -6,7 +6,6 @@ import ru.fDrachen.domain.model.OpenQuestionCard;
 import java.util.Optional;
 
 public interface QuestionRepository {
-    void save(OpenQuestionCard card);
     List<OpenQuestionCard> findAll();
     Optional<OpenQuestionCard> findById(Long id);
     void add(OpenQuestionCard openQuestionCard);
